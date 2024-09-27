@@ -1,8 +1,8 @@
 name: Formatting, Linting and Build
-on: push
+on: pull_request
 jobs:
-  formatting-and-linting:
-    name: Formatting And Linting
+  formatting-linting-and-build:
+    name: Formatting, Linting and Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
