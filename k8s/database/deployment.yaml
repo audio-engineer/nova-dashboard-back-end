@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nova-dashboard-postgresql
+  name: nova-dashboard-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nova-dashboard-postgresql
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: nova-dashboard-postgresql
+    spec:
+      containers:
+        - image: postgres:16-alpine
+          name: nova-dashboard-postgresql
+          resources: { }
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: nova
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: '12345'
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresql-data
+      volumes:
+        - name: postgresql-data
+          emptyDir: { }

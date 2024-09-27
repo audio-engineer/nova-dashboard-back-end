@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nova-dashboard-spring-boot
+  name: nova-dashboard-spring-boot
+spec:
+  ports:
+    - name: 8080-8080
+      nodePort: 5628
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: nova-dashboard-spring-boot
+  type: NodePort

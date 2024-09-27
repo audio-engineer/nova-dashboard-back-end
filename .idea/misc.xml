@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="PDMPlugin">
+    <option name="customRuleSets">
+      <list>
+        <option value="$PROJECT_DIR$/config/pmd/custom-ruleset.xml" />
+      </list>
+    </option>
+    <option name="inEditorAnnotationRules">
+      <list>
+        <option value="$PROJECT_DIR$/config/pmd/custom-ruleset.xml" />
+      </list>
+    </option>
+    <option name="optionKeyToValue">
+      <map>
+        <entry key="Statistics URL" value="" />
+        <entry key="Target JDK" value="23" />
+        <entry key="Threads" value="12" />
+      </map>
+    </option>
+    <option name="skipTestSources" value="false" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="corretto-22" project-jdk-type="JavaSDK" />
+</project>

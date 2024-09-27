@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nova-dashboard-postgresql
+  name: nova-dashboard-postgresql
+spec:
+  ports:
+    - name: 8080-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: nova-dashboard-postgresql
+  type: ClusterIP
