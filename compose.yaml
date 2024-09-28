@@ -1,0 +1,9 @@
+services:
+  postgresql:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: nova
+      POSTGRES_PASSWORD: example
+    ports:
+      - '5432:5432'
