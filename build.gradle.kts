@@ -11,6 +11,7 @@ plugins {
     checkstyle
     pmd
     id("com.github.spotbugs") version "6.0.22"
+    id("io.freefair.lombok") version "8.10"
 }
 
 group = "com.group6"
@@ -18,6 +19,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
+        vendor = JvmVendorSpec.AMAZON
         languageVersion = JavaLanguageVersion.of(22)
     }
     withJavadocJar()
@@ -29,13 +31,23 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     umlDoclet("nl.talsmasoftware:umldoclet:2.0.15")
 }
 
 configurations {
     umlDoclet
+}
+
+ext {
+    set("testcontainers.version", "1.20.1")
 }
 
 tasks.getByName<BootBuildImage>("bootBuildImage") {

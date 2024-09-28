@@ -10,7 +10,7 @@ jobs:
       - name: Set Up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: corretto
           java-version: 22
           cache: gradle
       - name: Setup Gradle
