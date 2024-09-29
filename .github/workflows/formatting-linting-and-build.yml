@@ -22,15 +22,15 @@ jobs:
       - name: Post Checkstyle Results
         uses: jwgmeligmeyling/checkstyle-github-action@master
         with:
-          path: 'build/reports/checkstyle/*.xml'
+          path: "build/reports/checkstyle/*.xml"
       - name: Post PMD Results
         uses: jwgmeligmeyling/pmd-github-action@master
         with:
-          path: 'build/reports/pmd/*.xml'
+          path: "build/reports/pmd/*.xml"
       - name: Post SpotBugs Results
         uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
-          path: 'build/reports/spotbugs/*.xml'
+          path: "build/reports/spotbugs/*.xml"
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
