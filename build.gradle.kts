@@ -2,6 +2,9 @@ import com.github.spotbugs.snom.Effort
 import org.springframework.boot.buildpack.platform.build.PullPolicy
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
+/**
+ * UMLDoclet configuration object.
+ */
 val umlDoclet: Configuration by configurations.creating
 
 plugins {
