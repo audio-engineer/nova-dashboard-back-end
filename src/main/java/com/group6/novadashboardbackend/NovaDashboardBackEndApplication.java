@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /** The main application entrypoint object. */
-@SuppressWarnings("PMD.UseUtilityClass")
+@SuppressWarnings({"PMD.UseUtilityClass", "ClassNamePrefixedWithPackageName"})
 @SpringBootApplication
 public class NovaDashboardBackEndApplication {
   /** The default NovaDashboardBackEndApplication constructor. */
