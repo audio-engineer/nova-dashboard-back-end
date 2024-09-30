@@ -6,5 +6,6 @@
     <plugin id="google-java-format" />
     <plugin id="mobi.hsz.idea.gitignore" />
     <plugin id="org.jetbrains.plugins.spotbugs" />
+    <plugin id="ru.adelf.idea.dotenv" />
   </component>
 </project>
