@@ -12,15 +12,16 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /** The main NovaDashboardBackEndApplication tests. */
+@SuppressWarnings("ClassNamePrefixedWithPackageName")
 @Testcontainers
 @SpringBootTest
-class NovaDashboardBackEndApplicationTests {
+final class NovaDashboardBackEndApplicationTests {
   /** Mock PostgreSQL database. */
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER =
       new PostgreSQLContainer<>("postgres:17-alpine");
 
   /** The default NovaDashboardBackEndApplicationTests constructor. */
-  public NovaDashboardBackEndApplicationTests() {
+  private NovaDashboardBackEndApplicationTests() {
     //
   }
 
@@ -44,9 +45,9 @@ class NovaDashboardBackEndApplicationTests {
 
   @Test
   void contextLoads() {
-    final int one = 1;
+    final int number = 1;
     final int expected = 1;
 
-    assertThat(one).isEqualTo(expected);
+    assertThat(number).isEqualTo(expected);
   }
 }

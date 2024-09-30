@@ -14,7 +14,7 @@ import lombok.Data;
 @Table(name = "order")
 public class Order {
   /** Order ID. */
-  @Id private Integer orderId;
+  @Id private Long orderId;
 
   /** Order name. */
   private String name;
