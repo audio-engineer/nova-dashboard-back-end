@@ -13,7 +13,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     checkstyle
     pmd
-    id("com.github.spotbugs") version "6.0.22"
+    id("com.github.spotbugs") version "6.0.24"
     id("io.freefair.lombok") version "8.10"
 }
 
@@ -50,7 +50,7 @@ configurations {
 }
 
 ext {
-    set("testcontainers.version", "1.20.1")
+    set("testcontainers.version", "1.20.2")
 }
 
 tasks.getByName<BootBuildImage>("bootBuildImage") {
@@ -72,7 +72,7 @@ tasks.javadoc {
 }
 
 checkstyle {
-    toolVersion = "10.18.0"
+    toolVersion = "10.18.2"
 }
 
 pmd {
