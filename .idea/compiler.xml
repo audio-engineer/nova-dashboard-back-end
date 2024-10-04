@@ -12,6 +12,6 @@
         <module name="nova-dashboard-back-end.test" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="22" />
+    <bytecodeTargetLevel target="23" />
   </component>
 </project>
