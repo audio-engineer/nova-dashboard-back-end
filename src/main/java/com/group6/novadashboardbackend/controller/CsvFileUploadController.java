@@ -27,7 +27,7 @@ public class CsvFileUploadController {
    */
   @PostMapping("/csv-upload")
   @ResponseBody
-  public final String handleFileUpload(final @RequestParam("csv-file") MultipartFile file) {
+  public final String handleFileUpload(@RequestParam("csv-file") final MultipartFile file) {
     LOGGER.info("CSV file upload started");
 
     return "You have uploaded " + file.getOriginalFilename() + "!";
