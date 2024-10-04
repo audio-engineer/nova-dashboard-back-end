@@ -28,6 +28,6 @@ public class OrderRepositoryService {
    * @return List of orders.
    */
   public final List<Order> getAll() {
-    return (List<Order>) orderRepository.findAll();
+    return orderRepository.findAll();
   }
 }
