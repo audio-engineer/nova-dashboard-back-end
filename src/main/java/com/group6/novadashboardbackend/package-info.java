@@ -1,2 +1,2 @@
-/** The main application package. */
+/// The main application package.
 package com.group6.novadashboardbackend;

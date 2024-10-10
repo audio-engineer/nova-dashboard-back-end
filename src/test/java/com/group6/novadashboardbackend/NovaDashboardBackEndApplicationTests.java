@@ -11,16 +11,15 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-/** The main NovaDashboardBackEndApplication tests. */
+/// The main NovaDashboardBackEndApplication tests.
 @SuppressWarnings("ClassNamePrefixedWithPackageName")
 @Testcontainers
 @SpringBootTest
 final class NovaDashboardBackEndApplicationTests {
-  /** Mock PostgreSQL database. */
+  /// Mock PostgreSQL database.
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER =
       new PostgreSQLContainer<>("postgres:17-alpine");
 
-  /** The default NovaDashboardBackEndApplicationTests constructor. */
   private NovaDashboardBackEndApplicationTests() {
     //
   }
