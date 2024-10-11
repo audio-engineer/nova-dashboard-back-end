@@ -13,12 +13,29 @@
   <rule ref="category/java/bestpractices.xml"/>
   <rule ref="category/java/codestyle.xml">
     <exclude name="LongVariable"/>
+    <!-- We often need long variable names -->
     <exclude name="UnnecessaryConstructor"/>
+
+    <!-- Calling super() in a constructor every time is very unnecessary -->
+    <exclude name="CallSuperInConstructor"/>
+
+    <!-- Having multiple return statements per method is fine -->
+    <exclude name="OnlyOneReturn"/>
   </rule>
   <rule ref="category/java/design.xml">
+    <!-- Nonsensical rule -->
     <exclude name="LoosePackageCoupling"/>
   </rule>
   <rule ref="category/java/documentation.xml"/>
+  <rule ref="category/java/documentation.xml/CommentSize">
+    <properties>
+      <!-- The default 6 lines is way too little -->
+      <property name="maxLines" value="20"/>
+
+      <!-- Taken from the Google Checkstyle configuration -->
+      <property name="maxLineLength" value="100"/>
+    </properties>
+  </rule>
   <rule ref="category/java/errorprone.xml"/>
   <rule ref="category/java/multithreading.xml"/>
   <rule ref="category/java/performance.xml"/>

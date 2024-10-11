@@ -2,25 +2,28 @@ package com.group6.novadashboardbackend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-/** The main NovaDashboardBackEndApplication tests. */
+/// The main NovaDashboardBackEndApplication tests.
 @SuppressWarnings("ClassNamePrefixedWithPackageName")
+@Slf4j
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 final class NovaDashboardBackEndApplicationTests {
-  /** Mock PostgreSQL database. */
+  /// Mock PostgreSQL database
+  @Container
+  @ServiceConnection
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER =
       new PostgreSQLContainer<>("postgres:17-alpine");
 
-  /** The default NovaDashboardBackEndApplicationTests constructor. */
   private NovaDashboardBackEndApplicationTests() {
     //
   }
@@ -28,19 +31,19 @@ final class NovaDashboardBackEndApplicationTests {
   @BeforeAll
   static void beforeAll() {
     POSTGRE_SQL_CONTAINER.start();
+
+    if (!POSTGRE_SQL_CONTAINER.isRunning()) {
+      throw new IllegalStateException("PostgreSQL container did not start properly");
+    }
+
+    final String jdbcUrl = POSTGRE_SQL_CONTAINER.getJdbcUrl();
+
+    log.info("PostgreSQL Container JDBC URL: {}", jdbcUrl);
   }
 
   @AfterAll
   static void afterAll() {
     POSTGRE_SQL_CONTAINER.stop();
-  }
-
-  @SuppressWarnings("PMD.UnusedPrivateMethod")
-  @DynamicPropertySource
-  private static void configureProperties(final DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", POSTGRE_SQL_CONTAINER::getJdbcUrl);
-    registry.add("spring.datasource.username", POSTGRE_SQL_CONTAINER::getUsername);
-    registry.add("spring.datasource.password", POSTGRE_SQL_CONTAINER::getPassword);
   }
 
   @Test
