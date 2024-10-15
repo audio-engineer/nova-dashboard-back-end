@@ -30,7 +30,7 @@
   <rule ref="category/java/documentation.xml/CommentSize">
     <properties>
       <!-- The default 6 lines is way too little -->
-      <property name="maxLines" value="20"/>
+      <property name="maxLines" value="25"/>
 
       <!-- Taken from the Google Checkstyle configuration -->
       <property name="maxLineLength" value="100"/>

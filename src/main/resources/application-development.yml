@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  docker:
+    compose:
+      stop:
+        command: down
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+  file:
+    path: var/log/
