@@ -4,22 +4,23 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://${DATABASE_URI}/${DATABASE_NAME}
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: create-drop
     properties:
       hibernate:
         globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    show-sql: true
-logging:
-  file:
-    path: var/log/
+    open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URL}
+          jwk-set-uri: ${JWK_SET_URL}
+          client-id: ${CLIENT_ID}
+          client-secret: ${CLIENT_SECRET}
+          cognito-domain: ${COGNITO_DOMAIN}
 security:
-  jwt:
-    secret-key: ${SECRET_KEY}
-    expiration-time: 36000
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}

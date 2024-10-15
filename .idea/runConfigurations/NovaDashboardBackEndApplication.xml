@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="NovaDashboardBackEndApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="NovaDashboardBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="development" />
     <module name="nova-dashboard-back-end.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.group6.novadashboardbackend.NovaDashboardBackEndApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.group6.nova.dashboard.backend.NovaDashboardBackendApplication" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.group6.novadashboardbackend.*" />
+        <option name="PATTERN" value="com.group6.nova.dashboard.backend.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
