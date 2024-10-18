@@ -18,9 +18,6 @@ spring:
         jwt:
           issuer-uri: ${ISSUER_URL}
           jwk-set-uri: ${JWK_SET_URL}
-          client-id: ${CLIENT_ID}
-          client-secret: ${CLIENT_SECRET}
-          cognito-domain: ${COGNITO_DOMAIN}
 security:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
