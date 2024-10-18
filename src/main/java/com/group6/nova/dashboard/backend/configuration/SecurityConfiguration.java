@@ -41,10 +41,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 class SecurityConfiguration {
   /// [SuppressWarnings] explanation:
-  /// - `DesignForExtension` - A method annotated with [org.springframework.context.annotation.Bean]
-  ///  in a [org.springframework.context.annotation.Configuration] annotated class cannot be final.
+  /// - `DesignForExtension` - A method annotated with [Bean] in a [Configuration] annotated class
+  /// cannot be final.
   /// - `ProhibitedExceptionDeclared`, `PMD.SignatureDeclareThrowsException` - We are throwing
-  /// [java.lang.Exception] because the default implementation also does it.
+  /// [Exception] because the default implementation also does it.
   /// - `NestedMethodCall` - We are using the configuration DSL which uses nested method calls.
   @Bean
   @SuppressWarnings({

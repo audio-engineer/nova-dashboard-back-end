@@ -33,8 +33,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 class CorsConfiguration {
   /// [SuppressWarnings] explanation:
-  /// - `DesignForExtension` - A method annotated with [org.springframework.context.annotation.Bean]
-  ///  in a [org.springframework.context.annotation.Configuration] annotated class cannot be final.
+  /// - `DesignForExtension` - A method annotated with [Bean] in a [Configuration] annotated class
+  /// cannot be final.
   @Bean
   @SuppressWarnings(DESIGN_FOR_EXTENSION)
   /* default */ CorsConfigurationSource corsConfigurationSource(
