@@ -38,8 +38,8 @@ public class TestcontainersConfiguration {
   }
 
   /// [SuppressWarnings] explanation:
-  /// - `DesignForExtension` - A method annotated with [org.springframework.context.annotation.Bean]
-  ///  in a [org.springframework.context.annotation.Configuration] annotated class cannot be final.
+  /// - `DesignForExtension` - A method annotated with [Bean] in a [TestConfiguration] annotated
+  /// class cannot be final.
   /// - `LocalCanBeFinal` - A try-with-resources statement cannot declare final variables.
   ///
   /// @return a mock PostgreSQL container
