@@ -6,6 +6,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
   docker:
     compose:
       stop:
