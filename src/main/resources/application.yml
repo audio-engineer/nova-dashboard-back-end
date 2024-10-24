@@ -18,6 +18,11 @@ spring:
         jwt:
           issuer-uri: ${ISSUER_URL}
           jwk-set-uri: ${JWK_SET_URL}
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
 security:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}

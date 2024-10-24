@@ -5,14 +5,10 @@ import lombok.ToString;
 
 /// Enum representing the various statuses an order can have.
 ///
-/// Annotations:
-/// - [ToString] - Generates a string representation of the object for debugging.
-/// - [AllArgsConstructor] - Generates a constructor for the enum fields.
-///
 /// @author Martin Kedmenec
 @ToString
 @AllArgsConstructor
-enum OrderStatus {
+public enum OrderStatus {
   /// Order is archived
   ARCHIVED("ARCHIVED"),
   /// Order is deleted/canceled
@@ -20,4 +16,18 @@ enum OrderStatus {
 
   /// Holds the order status value
   private final String status;
+
+  /// Parses a string and returns the corresponding [PaymentStatus] enum constant.
+  /// @param status the payment status string
+  /// @return the corresponding [PaymentStatus] enum constant
+  /// @throws IllegalArgumentException if the string does not match any constant
+  public static OrderStatus fromString(final String status) {
+    for (final OrderStatus orderStatus : values()) {
+      if (orderStatus.status.equalsIgnoreCase(status)) {
+        return orderStatus;
+      }
+    }
+
+    throw new IllegalArgumentException("Unknown order status: " + status);
+  }
 }

@@ -15,6 +15,7 @@ plugins {
     pmd
     id("com.github.spotbugs") version "6.0.24"
     id("io.freefair.lombok") version "8.10"
+    jacoco
 }
 
 group = "com.group6.nova.dashboard"
@@ -34,12 +35,14 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("uk.gov.nationalarchives:csv-validator-java-api:latest.release")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
     testAndDevelopmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -50,6 +53,23 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     umlDoclet("nl.talsmasoftware:umldoclet:2.0.15")
+}
+
+checkstyle {
+    toolVersion = "10.18.2"
+}
+
+pmd {
+    toolVersion = "7.6.0"
+    ruleSetFiles = files("config/pmd/custom-ruleset.xml")
+}
+
+spotbugs {
+    effort = Effort.MAX
+}
+
+jacoco {
+    toolVersion = "0.8.12"
 }
 
 configurations {
@@ -78,19 +98,6 @@ tasks.javadoc {
     docletOptions.doclet = "nl.talsmasoftware.umldoclet.UMLDoclet"
 }
 
-checkstyle {
-    toolVersion = "10.18.2"
-}
-
-pmd {
-    toolVersion = "7.6.0"
-    ruleSetFiles = files("config/pmd/custom-ruleset.xml")
-}
-
-spotbugs {
-    effort = Effort.MAX
-}
-
 tasks.spotbugsMain {
     reports.create("html") {
         required = true
@@ -103,4 +110,20 @@ tasks.spotbugsMain {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.test {
+    systemProperty("spring.profiles.active", "development")
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
+    }
 }

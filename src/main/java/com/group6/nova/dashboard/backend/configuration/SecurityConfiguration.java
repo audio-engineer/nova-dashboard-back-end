@@ -1,7 +1,6 @@
 package com.group6.nova.dashboard.backend.configuration;
 
-import static com.group6.nova.dashboard.backend.WarningValue.DESIGN_FOR_EXTENSION;
-
+import com.group6.nova.dashboard.backend.WarningValue;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.context.annotation.Bean;
@@ -26,19 +25,13 @@ import org.springframework.security.web.SecurityFilterChain;
 /// - Configures the OAuth2 resource server to validate JWT (JSON Web Tokens) using
 /// [HttpSecurity#oauth2ResourceServer(Customizer)].
 ///
-/// Annotations:
-/// - [ToString] - Generates a string representation of the object, useful for debugging.
-/// - [NoArgsConstructor] - Generates a no-argument constructor.
-/// - [Configuration] - Marks the class as a source of bean definitions.
-/// - [EnableWebSecurity] - Enables Spring Security's web security support.
-///
 /// @author Martin Kedmenec
 /// @see SecurityFilterChain
 /// @see HttpSecurity
-@ToString
-@NoArgsConstructor
 @Configuration
 @EnableWebSecurity
+@NoArgsConstructor
+@ToString
 class SecurityConfiguration {
   /// [SuppressWarnings] explanation:
   /// - `DesignForExtension` - A method annotated with [Bean] in a [Configuration] annotated class
@@ -48,20 +41,17 @@ class SecurityConfiguration {
   /// - `NestedMethodCall` - We are using the configuration DSL which uses nested method calls.
   @Bean
   @SuppressWarnings({
-    DESIGN_FOR_EXTENSION,
+    WarningValue.DESIGN_FOR_EXTENSION,
     "ProhibitedExceptionDeclared",
     "PMD.SignatureDeclareThrowsException",
     "NestedMethodCall"
   })
   /* default */ SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
+        // TODO Remove this method call
         .authorizeHttpRequests(
             (authorize) ->
-                authorize
-                    .requestMatchers("/authentication/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
+                authorize.requestMatchers("/**").permitAll().anyRequest().authenticated())
         .sessionManagement(
             (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
