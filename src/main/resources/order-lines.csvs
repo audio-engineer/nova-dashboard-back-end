@@ -1,0 +1,14 @@
+version 1.1
+@totalColumns 11
+@quoted
+"Orderline ID": uuid4
+"Product ID": uuid4
+"Title": notEmpty
+"Quantity": regex("-?\d+")
+"Order ID": uuid4
+"Price": regex("^-?(\d{1,3}\.)?\d{1,3}(,\d{1,2})?$")
+"Unit price": regex("^-?(\d{1,3}\.)?\d{1,3}(,\d{1,2})?$")
+"Unit price discounted": regex("^-?(\d{1,3}\.)?\d{1,3}(,\d{1,2})?$")
+"System product": is("0") or is("1")
+"Quantity Unit": notEmpty @optional
+"Cancelled": is("0") or is("1")

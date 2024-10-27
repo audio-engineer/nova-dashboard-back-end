@@ -1,8 +1,7 @@
 package com.group6.nova.dashboard.backend;
 
-import static com.group6.nova.dashboard.backend.WarningValue.DESIGN_FOR_EXTENSION;
-
 import java.util.List;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.devtools.restart.RestartScope;
@@ -20,10 +19,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 /// concrete tests.
 ///
 /// @author Martin Kedmenec
+@NoArgsConstructor
 @ToString
 @TestConfiguration(proxyBeanMethods = false)
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
-public class TestcontainersConfiguration {
+class TestcontainersConfiguration {
   /// Database username
   @Value("${spring.datasource.username}")
   private String username;
@@ -31,11 +31,6 @@ public class TestcontainersConfiguration {
   /// Database password
   @Value("${spring.datasource.password}")
   private String password;
-
-  /// Constructor.
-  public TestcontainersConfiguration() {
-    //
-  }
 
   /// [SuppressWarnings] explanation:
   /// - `DesignForExtension` - A method annotated with [Bean] in a [TestConfiguration] annotated
@@ -46,8 +41,8 @@ public class TestcontainersConfiguration {
   @Bean
   @ServiceConnection
   @RestartScope
-  @SuppressWarnings(DESIGN_FOR_EXTENSION)
-  public PostgreSQLContainer<?> postgreSqlContainer() {
+  @SuppressWarnings(WarningValue.DESIGN_FOR_EXTENSION)
+  /* default */ PostgreSQLContainer<?> postgreSqlContainer() {
     try (@SuppressWarnings("LocalCanBeFinal")
         PostgreSQLContainer<?> postgreSqlContainer =
             new PostgreSQLContainer<>("postgres:17-alpine")) {
@@ -55,8 +50,7 @@ public class TestcontainersConfiguration {
           .withExposedPorts()
           .withDatabaseName("nova")
           .withUsername(username)
-          .withPassword(password)
-          .withReuse(true);
+          .withPassword(password);
 
       final List<String> portBindings = List.of("5432:5432");
       postgreSqlContainer.setPortBindings(portBindings);

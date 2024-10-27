@@ -1,14 +1,12 @@
 package com.group6.nova.dashboard.backend.configuration;
 
-import static com.group6.nova.dashboard.backend.WarningValue.DESIGN_FOR_EXTENSION;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-
+import com.group6.nova.dashboard.backend.WarningValue;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -22,21 +20,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /// - Supports GET and POST methods for CORS requests.
 /// - Allows headers like `Authorization` and `Content-Type` in CORS requests.
 ///
-/// Annotations:
-/// - [NoArgsConstructor] - Generates a no-argument constructor.
-/// - [Configuration] - Marks the class as a source of bean definitions.
-///
 /// @author Martin Kedmenec
 /// @see CorsConfigurationSource
 /// @see UrlBasedCorsConfigurationSource
-@NoArgsConstructor
 @Configuration
+@NoArgsConstructor
 class CorsConfiguration {
   /// [SuppressWarnings] explanation:
   /// - `DesignForExtension` - A method annotated with [Bean] in a [Configuration] annotated class
   /// cannot be final.
   @Bean
-  @SuppressWarnings(DESIGN_FOR_EXTENSION)
+  @SuppressWarnings(WarningValue.DESIGN_FOR_EXTENSION)
   /* default */ CorsConfigurationSource corsConfigurationSource(
       @Value("${security.cors.allowed-origins}") final List<String> allowedOrigins) {
     final org.springframework.web.cors.CorsConfiguration configuration =
@@ -49,7 +43,8 @@ class CorsConfiguration {
     final List<String> allowedMethods = List.of(get, post);
     configuration.setAllowedMethods(allowedMethods);
 
-    final List<String> allowedHeaders = List.of(AUTHORIZATION, CONTENT_TYPE);
+    final List<String> allowedHeaders =
+        List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE);
     configuration.setAllowedHeaders(allowedHeaders);
 
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

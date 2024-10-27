@@ -3,10 +3,6 @@ spring:
     name: nova-dashboard-back-end
   config:
     import: optional:file:.env[.properties]
-  datasource:
-    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
   jpa:
     properties:
       hibernate:
@@ -18,6 +14,11 @@ spring:
         jwt:
           issuer-uri: ${ISSUER_URL}
           jwk-set-uri: ${JWK_SET_URL}
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
 security:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
