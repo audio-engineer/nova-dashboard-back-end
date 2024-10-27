@@ -34,6 +34,8 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor("org.mapstruct:mapstruct-processor:latest.release")
+    implementation("org.mapstruct:mapstruct:latest.release")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -44,8 +46,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("uk.gov.nationalarchives:csv-validator-java-api:latest.release")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    runtimeOnly("org.postgresql:postgresql")
     testAndDevelopmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("org.postgresql:postgresql")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:latest.release")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.security:spring-security-test")

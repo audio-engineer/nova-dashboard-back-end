@@ -1,13 +1,10 @@
-package com.group6.nova.dashboard.backend.batchprocessing;
+package com.group6.nova.dashboard.backend.model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
-import java.util.function.Consumer;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /// Service for parsing strings into [BigDecimal].
 ///
@@ -18,40 +15,42 @@ import org.springframework.stereotype.Service;
 /// @author Martin Kedmenec
 /// @see DecimalFormatSymbols
 /// @see DecimalFormat
-@Service
 @Slf4j
-@ToString
-class BigDecimalParserService {
+enum BigDecimalParser {
+  ;
+
   /// Grouping separator of the source data
   private static final char GROUPING_SEPARATOR = '.';
 
   /// Decimal separator of the source data
   private static final char DECIMAL_SEPARATOR = ',';
 
-  /// [DecimalFormat] instance
-  private final DecimalFormat decimalFormat;
+  /// [ThreadLocal] for [DecimalFormat] instance
+  private static final ThreadLocal<DecimalFormat> DECIMAL_FORMAT_THREAD_LOCAL =
+      ThreadLocal.withInitial(
+          () -> {
+            final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 
-  /// Constructor.
-  /* default */ BigDecimalParserService() {
-    final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+            symbols.setGroupingSeparator(GROUPING_SEPARATOR);
+            symbols.setDecimalSeparator(DECIMAL_SEPARATOR);
 
-    decimalFormatSymbols.setGroupingSeparator(GROUPING_SEPARATOR);
-    decimalFormatSymbols.setDecimalSeparator(DECIMAL_SEPARATOR);
+            final DecimalFormat decimalFormat = new DecimalFormat("#,##0.0#", symbols);
+            decimalFormat.setParseBigDecimal(true);
 
-    decimalFormat = new DecimalFormat("#,##0.0#", decimalFormatSymbols);
-    decimalFormat.setParseBigDecimal(true);
-  }
+            return decimalFormat;
+          });
 
-  /* default */ final void parseStringIntoBigDecimal(
-      final String value, final Consumer<? super BigDecimal> setter) {
+  /* default */ static BigDecimal parseStringIntoBigDecimal(final String value) {
+    BigDecimal result = null;
+
     try {
-      final BigDecimal bigDecimalValue = (BigDecimal) decimalFormat.parse(value);
-
-      setter.accept(bigDecimalValue);
+      result = (BigDecimal) DECIMAL_FORMAT_THREAD_LOCAL.get().parse(value);
     } catch (final ParseException parseException) {
       final String parseExceptionMessage = parseException.getMessage();
 
       log.error("Error parsing value: {}", parseExceptionMessage);
     }
+
+    return result;
   }
 }
