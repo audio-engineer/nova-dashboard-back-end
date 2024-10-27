@@ -4,6 +4,7 @@
     <plugin id="CheckStyle-IDEA" />
     <plugin id="PMDPlugin" />
     <plugin id="com.haulmont.jpab" />
+    <plugin id="com.intellij.spring.batch" />
     <plugin id="google-java-format" />
     <plugin id="mobi.hsz.idea.gitignore" />
     <plugin id="org.jetbrains.plugins.spotbugs" />

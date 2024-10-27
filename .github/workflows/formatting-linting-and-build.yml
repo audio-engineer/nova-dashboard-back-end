@@ -5,11 +5,12 @@ jobs:
     name: Formatting, Linting and Build
     runs-on: ubuntu-latest
     env:
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
       ISSUER_URL: ${{ secrets.ISSUER_URL }}
       JWK_SET_URL: ${{ secrets.JWK_SET_URL }}
-      CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-      COGNITO_DOMAIN: ${{ secrets.COGNITO_DOMAIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

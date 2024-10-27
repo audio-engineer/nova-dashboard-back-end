@@ -40,4 +40,5 @@ out/
 !.idea/
 .env
 *.csv
+!src/test/**/*.csv
 var/

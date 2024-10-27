@@ -9,12 +9,13 @@ val umlDoclet: Configuration by configurations.creating
 
 plugins {
     java
-    id("org.springframework.boot") version "3.3.4"
+    id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     checkstyle
     pmd
-    id("com.github.spotbugs") version "6.0.24"
-    id("io.freefair.lombok") version "8.10"
+    id("com.github.spotbugs") version "6.0.25"
+    id("io.freefair.lombok") version "8.10.2"
+    jacoco
 }
 
 group = "com.group6.nova.dashboard"
@@ -34,12 +35,14 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("uk.gov.nationalarchives:csv-validator-java-api:latest.release")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
     testAndDevelopmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -49,7 +52,24 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    umlDoclet("nl.talsmasoftware:umldoclet:2.0.15")
+    umlDoclet("nl.talsmasoftware:umldoclet:latest.release")
+}
+
+checkstyle {
+    toolVersion = "10.19.0"
+}
+
+pmd {
+    toolVersion = "7.7.0"
+    ruleSetFiles = files("config/pmd/custom-ruleset.xml")
+}
+
+spotbugs {
+    effort = Effort.MAX
+}
+
+jacoco {
+    toolVersion = "0.8.12"
 }
 
 configurations {
@@ -57,7 +77,7 @@ configurations {
 }
 
 ext {
-    set("testcontainers.version", "1.20.2")
+    set("testcontainers.version", "1.20.3")
 }
 
 tasks.getByName<BootBuildImage>("bootBuildImage") {
@@ -78,19 +98,6 @@ tasks.javadoc {
     docletOptions.doclet = "nl.talsmasoftware.umldoclet.UMLDoclet"
 }
 
-checkstyle {
-    toolVersion = "10.18.2"
-}
-
-pmd {
-    toolVersion = "7.6.0"
-    ruleSetFiles = files("config/pmd/custom-ruleset.xml")
-}
-
-spotbugs {
-    effort = Effort.MAX
-}
-
 tasks.spotbugsMain {
     reports.create("html") {
         required = true
@@ -103,4 +110,18 @@ tasks.spotbugsMain {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.test {
+    systemProperty("spring.profiles.active", "test")
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        html.required = true
+    }
 }

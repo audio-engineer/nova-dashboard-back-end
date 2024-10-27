@@ -1,0 +1,3 @@
+Created,Order Number,OrderVAT Number,Business Date,Price,Price excl. VAT,VAT,Tips,Payment Status,Order Status,Is revenue,Order ID,Order Reference,isDemo
+2024-08-21 06:08:03,1,1,2024-08-21,"0,00","0,00","0,00","0,00",Paid,ARCHIVED,1,078a1baf-405c-4d0d-9e41-e713d60bb2a1,,0
+2024-08-21 07:26:33,5,2,2024-08-21,"0,00","0,00","0,00","0,00",Paid,ARCHIVED,1,72716eec-4f95-405d-9f79-181469c76b72,,0
