@@ -70,6 +70,8 @@ public class OrderDto {
 
   /// Constructor.
   ///
+  /// Constructs an [OrderDto] instance using data from a [FieldSet].
+  ///
   /// @param fieldSet a FieldSet instance provided through `OrderFieldSetMapper`
   public OrderDto(final FieldSet fieldSet) {
     final String parsedCreated = fieldSet.readString(0);
