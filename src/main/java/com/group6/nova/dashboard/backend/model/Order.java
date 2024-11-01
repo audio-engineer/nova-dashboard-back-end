@@ -3,6 +3,8 @@ package com.group6.nova.dashboard.backend.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -84,11 +86,13 @@ public class Order {
 
   /// `Payment Status` column
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   @NonNull
   private PaymentStatus paymentStatus;
 
   /// `Order Status` column
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   @NonNull
   private OrderStatus orderStatus;
 
