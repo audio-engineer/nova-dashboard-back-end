@@ -4,6 +4,7 @@ import java.text.Collator;
 import java.util.Locale;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 
 /// Enum representing the various payment statuses an order can have.
@@ -15,6 +16,7 @@ import lombok.ToString;
 public enum PaymentStatus {
   /// Order is paid
   PAID("Paid"),
+
   /// Order is unpaid
   UNPAID("Unpaid");
 
@@ -25,16 +27,20 @@ public enum PaymentStatus {
   private final String status;
 
   /// Parses a string and returns the corresponding [PaymentStatus] enum constant.
+  ///
   /// @param status the payment status string
   /// @return the corresponding [PaymentStatus] enum constant
-  /// @throws IllegalArgumentException if the string does not match any constant
+  @NonNull
   public static PaymentStatus fromString(final String status) {
     for (final PaymentStatus paymentStatus : values()) {
-      if (0 != COLLATOR.compare(paymentStatus.status, status)) {
+      @SuppressWarnings("CallToSimpleGetterFromWithinClass")
+      final String statusValue = paymentStatus.getStatus();
+
+      if (0 == COLLATOR.compare(statusValue, status)) {
         return paymentStatus;
       }
     }
 
-    throw new IllegalArgumentException("Unknown payment status: " + status);
+    throw new UnknownStatusException("Unknown payment status: " + status);
   }
 }
