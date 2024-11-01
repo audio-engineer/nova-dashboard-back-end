@@ -17,7 +17,6 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Slf4j
 @ToString
-public class ImportJobService {
+public class ImportJobService implements ImportJob {
   /// [JobLauncher] instance
   private final JobLauncher jobLauncher;
 
@@ -40,14 +39,16 @@ public class ImportJobService {
     jobLauncher = jobLauncherParameter;
   }
 
-  private static String writeFileToTempFile(final MultipartFile multipartFile) throws IOException {
+  private static String writeFileToTempFile(final MultipartFile multipartFile) {
     final File tempFile;
 
     try {
       tempFile = File.createTempFile("uploaded_", ".csv");
     } catch (final IOException exception) {
-      throw new IOException("The temp file could not be created.", exception);
+      throw new TempFileException("Temp file could not be created.", exception);
     }
+
+    tempFile.deleteOnExit();
 
     final String tempFileAbsolutePath = tempFile.getAbsolutePath();
     final Path tempFilePath = Paths.get(tempFileAbsolutePath);
@@ -58,33 +59,18 @@ public class ImportJobService {
 
       outputStream.write(bytes);
     } catch (final IOException exception) {
-      final String message = exception.getMessage();
-
-      log.error(message, exception);
+      throw new TempFileException("Failed to write to temp file.", exception);
     }
 
     return tempFileAbsolutePath;
   }
 
-  /// Saves the multipart file to a temporal file in the filesystem, and, on success, proceeds to
-  /// launch the batch job.
-  ///
-  /// @param job a Job instance
-  /// @param multipartFile a MultipartFile instance
-  @Async
+  @Override
   @SuppressWarnings(WarningValue.DESIGN_FOR_EXTENSION)
   public void launchImportJob(final Job job, final MultipartFile multipartFile) {
     final String tempFileAbsolutePath;
 
-    try {
-      tempFileAbsolutePath = writeFileToTempFile(multipartFile);
-    } catch (final IOException exception) {
-      final String message = exception.getMessage();
-
-      log.error(message, exception);
-
-      return;
-    }
+    tempFileAbsolutePath = writeFileToTempFile(multipartFile);
 
     runImportJob(job, tempFileAbsolutePath);
   }
@@ -104,9 +90,7 @@ public class ImportJobService {
         | JobRestartException
         | JobInstanceAlreadyCompleteException
         | JobParametersInvalidException exception) {
-      final String message = exception.getMessage();
-
-      log.error(message, exception);
+      throw new ImportJobException("Failed to launch import job.", exception);
     }
   }
 }

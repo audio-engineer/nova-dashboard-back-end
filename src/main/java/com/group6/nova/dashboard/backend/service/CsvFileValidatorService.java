@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.nationalarchives.csv.validator.api.java.CsvValidator;
 import uk.gov.nationalarchives.csv.validator.api.java.FailMessage;
@@ -36,14 +35,15 @@ import uk.gov.nationalarchives.csv.validator.api.java.WarningMessage;
 ///
 /// @author Martin Kedmenec
 /// @see CsvValidator
+/// @see CsvFileValidator
 @Slf4j
 @ToString
-public class CsvFileValidatorService implements Validator {
+public class CsvFileValidatorService implements CsvFileValidator {
   /// [Collator] instance
   private static final Collator COLLATOR = Collator.getInstance(Locale.US);
 
   /// Filename prefix of the CSV file under test
-  private final String supportedFilePrefix;
+  @Getter private final String supportedFilePrefix;
 
   /// Filename of a CsvSchema
   private final String schema;
@@ -90,7 +90,7 @@ public class CsvFileValidatorService implements Validator {
         && !inputFileOriginalFilename.contains(supportedFilePrefix)) {
       final String errorCode = CsvFileValidatorErrorCode.FILE_NAME.getErrorCode();
 
-      errors.rejectValue(null, errorCode);
+      errors.reject(errorCode);
 
       return false;
     }
@@ -139,7 +139,15 @@ public class CsvFileValidatorService implements Validator {
           CsvValidator.validate(
               inputFileReader, orderCsvSchemaReader, true, pathSubstitutions, true, false);
     } catch (final IOException exception) {
-      throw new UncheckedIOException(exception);
+      final String message = exception.getMessage();
+
+      log.error(message);
+
+      final String errorCode = CsvFileValidatorErrorCode.FILE_ERROR.getErrorCode();
+
+      errors.reject(errorCode);
+
+      return;
     }
 
     if (messages.isEmpty()) {
@@ -164,6 +172,6 @@ public class CsvFileValidatorService implements Validator {
     final String messageString = messageStringBuilder.toString();
     final String errorCode = CsvFileValidatorErrorCode.FILE_VALIDATION.getErrorCode();
 
-    errors.rejectValue(null, errorCode, messageString);
+    errors.reject(errorCode, messageString);
   }
 }
