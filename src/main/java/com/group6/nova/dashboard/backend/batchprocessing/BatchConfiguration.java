@@ -1,4 +1,6 @@
-package com.group6.nova.dashboard.backend.batchprocessing;
+package com.group6.nova.dashboard.backend.batchprocessing; // NOPMD
+
+// PMD.CouplingBetweenObjects suppressed due to high number of imports in this class.
 
 import com.group6.nova.dashboard.backend.annotation.OrderImportJob;
 import com.group6.nova.dashboard.backend.annotation.OrderLineImportJob;
@@ -6,6 +8,7 @@ import com.group6.nova.dashboard.backend.model.Order;
 import com.group6.nova.dashboard.backend.model.OrderLine;
 import com.group6.nova.dashboard.backend.repository.OrderLineRepository;
 import com.group6.nova.dashboard.backend.repository.OrderRepository;
+import java.util.UUID;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.batch.core.Job;
@@ -14,6 +17,7 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -123,15 +127,38 @@ class BatchConfiguration {
   }
 
   @Bean
+  /* default */ ItemProcessor<Order, Order> orderDuplicateItemProcessor(
+      final OrderRepository orderRepository) {
+    return item -> {
+      final UUID orderId = item.getOrderId();
+
+      return orderRepository.existsById(orderId) ? null : item;
+    };
+  }
+
+  @Bean
+  /* default */ ItemProcessor<OrderLine, OrderLine> orderLineDuplicateItemProcessor(
+      final OrderLineRepository orderLineRepository) {
+    return item -> {
+      final UUID orderLineId = item.getOrderLineId();
+
+      return orderLineRepository.existsById(orderLineId) ? null : item;
+    };
+  }
+
+  @Bean
   /* default */ Step orderImportStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       @Qualifier("ordersReader") final FlatFileItemReader<? extends Order> reader,
+      @Qualifier("orderDuplicateItemProcessor")
+          final ItemProcessor<? super Order, ? extends Order> processor,
       @Qualifier("orderRepositoryWriter") final RepositoryItemWriter<? super Order> writer) {
 
     return new StepBuilder("orderImportStep", jobRepository)
         .<Order, Order>chunk(3, platformTransactionManager)
         .reader(reader)
+        .processor(processor)
         .writer(writer)
         .build();
   }
@@ -141,12 +168,15 @@ class BatchConfiguration {
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       @Qualifier("orderLinesReader") final FlatFileItemReader<? extends OrderLine> reader,
+      @Qualifier("orderLineDuplicateItemProcessor")
+          final ItemProcessor<? super OrderLine, ? extends OrderLine> processor,
       @Qualifier("orderLineRepositoryWriter")
           final RepositoryItemWriter<? super OrderLine> writer) {
 
     return new StepBuilder("orderLineImportStep", jobRepository)
         .<OrderLine, OrderLine>chunk(3, platformTransactionManager)
         .reader(reader)
+        .processor(processor)
         .writer(writer)
         .build();
   }
