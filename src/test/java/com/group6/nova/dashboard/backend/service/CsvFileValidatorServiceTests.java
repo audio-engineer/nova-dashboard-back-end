@@ -1,11 +1,9 @@
-package com.group6.nova.dashboard.backend;
+package com.group6.nova.dashboard.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.group6.nova.dashboard.backend.TestcontainersConfiguration;
 import com.group6.nova.dashboard.backend.annotation.OrderValidator;
-import com.group6.nova.dashboard.backend.service.CsvFileValidatorErrorCode;
-import com.group6.nova.dashboard.backend.service.CsvFileValidatorService;
-import com.group6.nova.dashboard.backend.service.SupportedFiles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

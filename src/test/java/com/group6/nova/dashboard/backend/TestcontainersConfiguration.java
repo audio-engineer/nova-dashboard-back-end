@@ -23,7 +23,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @ToString
 @TestConfiguration(proxyBeanMethods = false)
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
-class TestcontainersConfiguration {
+public class TestcontainersConfiguration {
   /// Database username
   @Value("${spring.datasource.username}")
   private String username;

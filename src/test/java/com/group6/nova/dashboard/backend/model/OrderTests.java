@@ -1,10 +1,8 @@
-package com.group6.nova.dashboard.backend;
+package com.group6.nova.dashboard.backend.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.group6.nova.dashboard.backend.model.Order;
-import com.group6.nova.dashboard.backend.model.OrderStatus;
-import com.group6.nova.dashboard.backend.model.PaymentStatus;
+import com.group6.nova.dashboard.backend.TestcontainersConfiguration;
 import com.group6.nova.dashboard.backend.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
