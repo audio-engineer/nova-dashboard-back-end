@@ -1,8 +1,8 @@
-package com.group6.nova.dashboard.backend;
+package com.group6.nova.dashboard.backend.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.group6.nova.dashboard.backend.controller.OrderController;
+import com.group6.nova.dashboard.backend.TestcontainersConfiguration;
 import com.group6.nova.dashboard.backend.service.SupportedFiles;
 import java.nio.file.Files;
 import lombok.NoArgsConstructor;

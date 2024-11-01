@@ -10,13 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Import;
 
 /// Tests of the error message resolution.
 ///
 /// @author Martin Kedmenec
 @SpringBootTest
-@Import(TestcontainersConfiguration.class)
 @NoArgsConstructor
 @ToString
 @SuppressWarnings("NestedMethodCall")
