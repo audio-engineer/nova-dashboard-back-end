@@ -1,6 +1,7 @@
 package com.group6.nova.dashboard.backend.model;
 
 import com.group6.nova.dashboard.backend.repository.OrderRepository;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -45,7 +46,7 @@ public interface OrderLineMapper {
     final Order order =
         orderRepository
             .findByOrderId(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+            .orElseThrow(() -> new NoSuchElementException("Order not found"));
 
     orderLine.setOrder(order);
 
