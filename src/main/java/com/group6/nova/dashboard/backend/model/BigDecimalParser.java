@@ -27,18 +27,19 @@ enum BigDecimalParser {
 
   /// [ThreadLocal] for [DecimalFormat] instance
   private static final ThreadLocal<DecimalFormat> DECIMAL_FORMAT_THREAD_LOCAL =
-      ThreadLocal.withInitial(
-          () -> {
-            final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+      ThreadLocal.withInitial(BigDecimalParser::supplier);
 
-            symbols.setGroupingSeparator(GROUPING_SEPARATOR);
-            symbols.setDecimalSeparator(DECIMAL_SEPARATOR);
+  private static DecimalFormat supplier() {
+    final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 
-            final DecimalFormat decimalFormat = new DecimalFormat("#,##0.0#", symbols);
-            decimalFormat.setParseBigDecimal(true);
+    symbols.setGroupingSeparator(GROUPING_SEPARATOR);
+    symbols.setDecimalSeparator(DECIMAL_SEPARATOR);
 
-            return decimalFormat;
-          });
+    final DecimalFormat decimalFormat = new DecimalFormat("#,##0.0#", symbols);
+    decimalFormat.setParseBigDecimal(true);
+
+    return decimalFormat;
+  }
 
   /* default */ static BigDecimal parseStringIntoBigDecimal(final String value) {
     BigDecimal result = null;
