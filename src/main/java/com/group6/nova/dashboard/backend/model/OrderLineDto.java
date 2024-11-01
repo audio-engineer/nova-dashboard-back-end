@@ -48,6 +48,8 @@ public class OrderLineDto {
 
   /// Constructor.
   ///
+  /// Constructs an [OrderLineDto] instance using data from a [FieldSet].
+  ///
   /// @param fieldSet a FieldSet instance provided through `OrderLineFieldSetMapper`
   public OrderLineDto(final FieldSet fieldSet) {
     final String parsedOrderLineId = fieldSet.readString(0);
