@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /// @author Martin Kedmenec
 /// @see Order
 /// @see JpaRepository
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, UUID> {
   /// Finds an order by order ID.
   ///
   /// @param orderId the order ID

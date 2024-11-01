@@ -1,6 +1,7 @@
 package com.group6.nova.dashboard.backend.repository;
 
 import com.group6.nova.dashboard.backend.model.OrderLine;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /// Repository interface for managing [OrderLine] entities.
@@ -9,4 +10,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /// It allows interaction with the database for operations related to orders.
 ///
 /// @author Martin Kedmenec
-public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {}
+public interface OrderLineRepository extends JpaRepository<OrderLine, UUID> {}
