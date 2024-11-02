@@ -9,7 +9,7 @@ import java.io.Serial;
 class ImportJobException extends RuntimeException {
   @Serial private static final long serialVersionUID = 7687091833844853416L;
 
-  /* default */ ImportJobException(final String message, final Throwable cause) {
-    super(message, cause);
+  /* default */ ImportJobException(final Throwable cause) {
+    super("Failed to launch import job.", cause);
   }
 }

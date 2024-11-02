@@ -90,7 +90,7 @@ public class ImportJobService implements ImportJob {
         | JobRestartException
         | JobInstanceAlreadyCompleteException
         | JobParametersInvalidException exception) {
-      throw new ImportJobException("Failed to launch import job.", exception);
+      throw new ImportJobException(exception);
     }
   }
 }
