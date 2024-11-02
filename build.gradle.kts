@@ -13,7 +13,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     checkstyle
     pmd
-    id("com.github.spotbugs") version "6.0.25"
+    id("com.github.spotbugs") version "6.0.26"
     id("io.freefair.lombok") version "8.10.2"
     jacoco
 }
@@ -59,7 +59,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "10.19.0"
+    toolVersion = "10.20.0"
 }
 
 pmd {
@@ -77,10 +77,6 @@ jacoco {
 
 configurations {
     umlDoclet
-}
-
-ext {
-    set("testcontainers.version", "1.20.3")
 }
 
 tasks.getByName<BootBuildImage>("bootBuildImage") {
