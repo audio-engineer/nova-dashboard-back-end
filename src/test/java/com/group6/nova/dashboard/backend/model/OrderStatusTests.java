@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 /// @see OrderStatus
 @SpringBootTest
 @NoArgsConstructor
+@SuppressWarnings("NestedMethodCall")
 class OrderStatusTests {
   @Test
   final void testOrderStatusArchivedFromString() {
@@ -29,6 +30,7 @@ class OrderStatusTests {
   }
 
   @Test
+  @SuppressWarnings("TestMethodWithoutAssertion")
   final void testInvalidOrderStatus() {
     final String invalidOrderStatus = "CREATED";
 

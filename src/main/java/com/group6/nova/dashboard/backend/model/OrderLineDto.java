@@ -1,6 +1,5 @@
 package com.group6.nova.dashboard.backend.model;
 
-import com.group6.nova.dashboard.backend.batchprocessing.OrderLineFieldSetMapper;
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Value;
@@ -9,12 +8,12 @@ import org.springframework.batch.item.file.transform.FieldSet;
 /// DTO for the [OrderLine] entity.
 ///
 /// @author Martin Kedmenec
-/// @see OrderLineFieldSetMapper
 @Value
 @SuppressWarnings("ClassWithTooManyFields")
 public class OrderLineDto {
   /// `Orderline ID` column
-  UUID orderLineId;
+  @SuppressWarnings("PMD.ShortVariable")
+  UUID id;
 
   /// `Product ID` column
   UUID productId;
@@ -53,7 +52,7 @@ public class OrderLineDto {
   /// @param fieldSet a FieldSet instance provided through `OrderLineFieldSetMapper`
   public OrderLineDto(final FieldSet fieldSet) {
     final String parsedOrderLineId = fieldSet.readString(0);
-    orderLineId = UUID.fromString(parsedOrderLineId);
+    id = UUID.fromString(parsedOrderLineId);
 
     final String parsedProductId = fieldSet.readString(1);
     productId = UUID.fromString(parsedProductId);

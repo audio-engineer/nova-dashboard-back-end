@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /// in Spring's dependency injection.
 ///
 /// @author Martin Kedmenec
+@SuppressWarnings("DuplicateStringLiteralInspection")
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Qualifier("orderLineImportJob")
-public @interface OrderLineImportJob {}
+@Qualifier("orderLineAndProductImportJob")
+public @interface OrderLineAndProductImportJob {}

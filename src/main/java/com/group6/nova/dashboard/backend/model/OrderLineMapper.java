@@ -1,6 +1,7 @@
 package com.group6.nova.dashboard.backend.model;
 
 import com.group6.nova.dashboard.backend.repository.OrderRepository;
+import com.group6.nova.dashboard.backend.repository.ProductRepository;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -29,26 +30,38 @@ public interface OrderLineMapper {
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "order", ignore = true)
+  @Mapping(target = "product", ignore = true)
   OrderLine toEntity(OrderLineDto orderLineDto);
 
   /// Converts an instance of [OrderLineDto] to its corresponding entity [OrderLine], but
-  /// additionally searches for an instance of the corresponding [Order] instance and adds a
-  /// reference to the [OrderLine#order] field.
+  /// additionally searches for an instance of the corresponding [Order] and [Product] instances,
+  /// and adds references to the [OrderLine#order] and [OrderLine#product] fields respectively.
   ///
   /// @param orderLineDto OrderLineDto instance
   /// @param orderRepository OrderRepository instance
+  /// @param productRepository ProductRepository instance
   /// @return OrderLine entity instance
   default OrderLine toEntityWithOrder(
-      final OrderLineDto orderLineDto, final OrderRepository orderRepository) {
+      final OrderLineDto orderLineDto,
+      final OrderRepository orderRepository,
+      final ProductRepository productRepository) {
     final OrderLine orderLine = toEntity(orderLineDto);
 
     final UUID orderId = orderLineDto.getOrderId();
     final Order order =
         orderRepository
-            .findByOrderId(orderId)
+            .findById(orderId)
             .orElseThrow(() -> new NoSuchElementException("Order not found"));
 
     orderLine.setOrder(order);
+
+    final UUID productId = orderLineDto.getProductId();
+    final Product product =
+        productRepository
+            .findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("Product not found"));
+
+    orderLine.setProduct(product);
 
     return orderLine;
   }
