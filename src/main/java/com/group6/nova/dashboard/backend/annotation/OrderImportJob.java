@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /// Spring's dependency injection.
 ///
 /// @author Martin Kedmenec
+@SuppressWarnings("DuplicateStringLiteralInspection")
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier("orderImportJob")

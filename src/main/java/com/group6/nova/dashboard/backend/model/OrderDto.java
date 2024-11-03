@@ -1,6 +1,5 @@
 package com.group6.nova.dashboard.backend.model;
 
-import com.group6.nova.dashboard.backend.batchprocessing.OrderFieldSetMapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import org.springframework.batch.item.file.transform.FieldSet;
 /// DTO for the [Order] entity.
 ///
 /// @author Martin Kedmenec
-/// @see OrderFieldSetMapper
 @Value
 @SuppressWarnings("ClassWithTooManyFields")
 public class OrderDto {
@@ -60,7 +58,8 @@ public class OrderDto {
   Boolean isRevenue;
 
   /// `Order ID` column
-  UUID orderId;
+  @SuppressWarnings("PMD.ShortVariable")
+  UUID id;
 
   /// `Order Reference` column
   Integer orderReference;
@@ -108,7 +107,7 @@ public class OrderDto {
     isRevenue = 0 != parsedIsRevenue;
 
     final String parsedOrderId = fieldSet.readString(11);
-    orderId = UUID.fromString(parsedOrderId);
+    id = UUID.fromString(parsedOrderId);
 
     orderReference = fieldSet.readInt(12, 0);
 

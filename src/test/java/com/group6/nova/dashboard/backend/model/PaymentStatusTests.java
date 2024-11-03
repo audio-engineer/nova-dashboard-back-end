@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 /// @see PaymentStatus
 @SpringBootTest
 @NoArgsConstructor
+@SuppressWarnings("NestedMethodCall")
 class PaymentStatusTests {
   @Test
   final void testPaymentStatusPaidFromString() {
@@ -29,6 +30,7 @@ class PaymentStatusTests {
   }
 
   @Test
+  @SuppressWarnings("TestMethodWithoutAssertion")
   final void testInvalidOrderStatus() {
     final String invalidPaymentStatus = "invalid";
 

@@ -1,18 +1,21 @@
 package com.group6.nova.dashboard.backend.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.ToString.Exclude;
@@ -20,43 +23,25 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-/// Represents the order line entity.
+/// Represents the product entity.
 ///
 /// @author Martin Kedmenec
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
-@SuppressWarnings({"ClassWithTooManyFields", "PMD.TooManyFields"})
-public class OrderLine {
-  /// `Orderline ID` column
+public class Product {
+  /// Product ID
   @Id
   @NotNull
+  @NonNull
   @SuppressWarnings("PMD.ShortVariable")
   private UUID id;
 
-  /// `Quantity` column
-  @NotNull private Integer quantity;
-
-  /// `Price` column
-  @NotNull private BigDecimal price;
-
-  /// `Unit price` column
-  @NotNull private BigDecimal unitPrice;
-
-  /// `Unit price discounted` column
-  @NotNull private BigDecimal unitPriceDiscounted;
-
-  /// `System product` column
-  @NotNull private Boolean systemProduct;
-
-  /// `Quantity Unit` column
-  private String quantityUnit;
-
-  /// `Cancelled` column
-  @NotNull private Boolean cancelled;
+  /// Product name
+  @NotNull @NonNull private String name;
 
   /// Entity creation timestamp
   @CreationTimestamp
@@ -69,15 +54,14 @@ public class OrderLine {
   @ColumnDefault("now()")
   private ZonedDateTime updatedAt;
 
-  /// Order reference
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
+  /// OrderLines reference
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
   @Exclude
-  private Order order;
+  private List<OrderLine> orderLines;
 
-  /// Product reference
+  /// Category reference
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "category_id", referencedColumnName = "id")
   @Exclude
-  private Product product;
+  private Category category;
 }

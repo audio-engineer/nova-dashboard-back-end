@@ -1,7 +1,7 @@
 package com.group6.nova.dashboard.backend.controller;
 
 import com.group6.nova.dashboard.backend.annotation.OrderImportJob;
-import com.group6.nova.dashboard.backend.annotation.OrderLineImportJob;
+import com.group6.nova.dashboard.backend.annotation.OrderLineAndProductImportJob;
 import com.group6.nova.dashboard.backend.annotation.OrderLineValidator;
 import com.group6.nova.dashboard.backend.annotation.OrderValidator;
 import com.group6.nova.dashboard.backend.service.CsvFileValidator;
@@ -48,7 +48,7 @@ public class OrderController {
   private final Job orderImportJob;
 
   /// orderLineImportJob bean
-  private final Job orderLineImportJob;
+  private final Job orderLineAndProductImportJob;
 
   /// [ImportJob] instance
   private final ImportJob importJob;
@@ -61,20 +61,20 @@ public class OrderController {
   /// @param orderValidatorParameter orderValidator bean
   /// @param orderLineValidatorParameter orderLineValidator bean
   /// @param orderImportJobParameter orderImportJob bean
-  /// @param orderLineImportJobParameter orderLineImportJob bean
+  /// @param orderLineAndProductImportJobParameter orderLineImportJob bean
   /// @param importJobParameter ImportJobService instance
   /// @param messageSourceParameter MessageSource instance
   public OrderController(
       @OrderValidator final CsvFileValidator orderValidatorParameter,
       @OrderLineValidator final CsvFileValidator orderLineValidatorParameter,
       @OrderImportJob final Job orderImportJobParameter,
-      @OrderLineImportJob final Job orderLineImportJobParameter,
+      @OrderLineAndProductImportJob final Job orderLineAndProductImportJobParameter,
       final ImportJob importJobParameter,
       final MessageSource messageSourceParameter) {
     orderValidator = orderValidatorParameter;
     orderLineValidator = orderLineValidatorParameter;
     orderImportJob = orderImportJobParameter;
-    orderLineImportJob = orderLineImportJobParameter;
+    orderLineAndProductImportJob = orderLineAndProductImportJobParameter;
     importJob = importJobParameter;
     messageSource = messageSourceParameter;
   }
@@ -130,6 +130,6 @@ public class OrderController {
     final Errors bindingResult = new BeanPropertyBindingResult(multipartFile, "orderLine");
 
     return validateAndGenerateResponse(
-        multipartFile, bindingResult, orderLineValidator, orderLineImportJob);
+        multipartFile, bindingResult, orderLineValidator, orderLineAndProductImportJob);
   }
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -16,9 +16,10 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.ToString.Exclude;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -36,7 +37,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 /// @see PaymentStatus
 /// @see OrderStatus
 @Entity
-@Table(name = "order")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -44,90 +44,69 @@ import org.hibernate.annotations.UpdateTimestamp;
 @ToString
 @SuppressWarnings({"ClassWithTooManyFields", "PMD.TooManyFields"})
 public class Order {
+  /// `Order ID` column
+  @Id
+  @NotNull
+  @SuppressWarnings("PMD.ShortVariable")
+  private UUID id;
+
   /// `Created` column
-  @Column(nullable = false)
-  @NonNull
-  private ZonedDateTime created;
+  @NotNull private ZonedDateTime created;
 
   /// `Order Number` column
-  @Column(nullable = false)
-  @NonNull
-  private Long orderNumber = 0L;
+  @NotNull private Long orderNumber;
 
   /// `OrderVAT Number` column
-  @Column(nullable = false)
-  @NonNull
-  private Integer orderVatNumber;
+  @NotNull private Integer orderVatNumber;
 
   /// `Business Date` column
-  @Column(nullable = false)
-  @NonNull
-  private LocalDate businessDate;
+  @NotNull private LocalDate businessDate;
 
   /// `Price` column
-  @Column(nullable = false)
-  @NonNull
-  private BigDecimal price;
+  @NotNull private BigDecimal price;
 
   /// `Price excl. VAT` column
-  @Column(nullable = false)
-  @NonNull
-  private BigDecimal priceExclVat;
+  @NotNull private BigDecimal priceExclVat;
 
   /// `VAT` column
-  @Column(nullable = false)
-  @NonNull
-  private BigDecimal vat;
+  @NotNull private BigDecimal vat;
 
   /// `Tips` column
-  @Column(nullable = false)
-  @NonNull
-  private BigDecimal tips;
+  @NotNull private BigDecimal tips;
 
   /// `Payment Status` column
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  @NonNull
+  @NotNull
   private PaymentStatus paymentStatus;
 
   /// `Order Status` column
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  @NonNull
+  @NotNull
   private OrderStatus orderStatus;
 
   /// `Is revenue` column
-  @Column(nullable = false)
-  @NonNull
-  private Boolean isRevenue;
-
-  /// `Order ID` column
-  @Id
-  @Column(nullable = false)
-  @NonNull
-  private UUID orderId;
+  @NotNull private Boolean isRevenue;
 
   /// `Order Reference` column
-  @Column(nullable = false)
-  @NonNull
-  private Integer orderReference;
+  @NotNull private Integer orderReference;
 
   /// `isDemo` column
-  @Column(nullable = false)
-  @NonNull
-  private Boolean isDemo;
+  @NotNull private Boolean isDemo;
 
   /// Entity creation timestamp
   @CreationTimestamp
-  @Column(nullable = false)
+  @Column(insertable = false, updatable = false)
+  @ColumnDefault("now()")
   private ZonedDateTime createdAt;
 
   /// Entity update timestamp
   @UpdateTimestamp
-  @Column(nullable = false)
+  @Column(insertable = false, updatable = false)
+  @ColumnDefault("now()")
   private ZonedDateTime updatedAt;
 
   /// OrderLines reference
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Exclude
   private List<OrderLine> orderLines;
 }
