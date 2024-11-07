@@ -29,4 +29,21 @@ public interface OrderLineRepository extends JpaRepository<OrderLine, UUID> {
       """)
   List<Object[]> findDailySalesByCategory(
       LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+  /// Returns the total number of sales for each hour of each day in the date range.
+  ///
+  /// @param startDate start date
+  /// @param endDate end date
+  /// @param pageable Pageable instance
+  /// @return list of hourly sales grouped by date
+  @Query(
+      """
+      select o.order.businessDate as date, extract(hour from o.order.created) as hour,
+             sum(o.quantity) as totalSales
+      from OrderLine o
+      where o.order.businessDate between :startDate and :endDate
+      group by o.order.businessDate, extract(hour from o.order.created)
+      order by o.order.businessDate, extract(hour from o.order.created)
+      """)
+  List<Object[]> findHourlySales(LocalDate startDate, LocalDate endDate, Pageable pageable);
 }
