@@ -34,7 +34,6 @@ class StepConfiguration {
       @Qualifier("orderDuplicateItemProcessor")
           final ItemProcessor<? super OrderDto, ? extends Order> processor,
       @Qualifier("orderRepositoryWriter") final RepositoryItemWriter<? super Order> writer) {
-
     return new StepBuilder("orderImportStep", jobRepository)
         .<OrderDto, Order>chunk(3, platformTransactionManager)
         .reader(reader)

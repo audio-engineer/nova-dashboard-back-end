@@ -19,6 +19,7 @@ public class NovaDashboardBackendApplication {
   }
 
   /// The main application entrypoint.
+  ///
   /// @param args the application arguments
   public static void main(final String[] args) {
     SpringApplication.run(NovaDashboardBackendApplication.class, args);
