@@ -39,8 +39,9 @@ class CorsConfiguration {
     configuration.setAllowedOrigins(allowedOrigins);
 
     final String get = HttpMethod.GET.name();
+    final String put = HttpMethod.PUT.name();
     final String post = HttpMethod.POST.name();
-    final List<String> allowedMethods = List.of(get, post);
+    final List<String> allowedMethods = List.of(get, put, post);
     configuration.setAllowedMethods(allowedMethods);
 
     final List<String> allowedHeaders =
