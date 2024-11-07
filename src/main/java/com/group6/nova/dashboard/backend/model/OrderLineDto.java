@@ -2,6 +2,7 @@ package com.group6.nova.dashboard.backend.model;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.Value;
 import org.springframework.batch.item.file.transform.FieldSet;
 
@@ -50,7 +51,7 @@ public class OrderLineDto {
   /// Constructs an [OrderLineDto] instance using data from a [FieldSet].
   ///
   /// @param fieldSet a FieldSet instance provided through `OrderLineFieldSetMapper`
-  public OrderLineDto(final FieldSet fieldSet) {
+  public OrderLineDto(@NonNull final FieldSet fieldSet) {
     final String parsedOrderLineId = fieldSet.readString(0);
     id = UUID.fromString(parsedOrderLineId);
 

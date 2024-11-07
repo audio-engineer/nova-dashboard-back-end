@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.Value;
 import org.springframework.batch.item.file.transform.FieldSet;
 
@@ -72,7 +73,7 @@ public class OrderDto {
   /// Constructs an [OrderDto] instance using data from a [FieldSet].
   ///
   /// @param fieldSet a FieldSet instance provided through `OrderFieldSetMapper`
-  public OrderDto(final FieldSet fieldSet) {
+  public OrderDto(@NonNull final FieldSet fieldSet) {
     final String parsedCreated = fieldSet.readString(0);
     final LocalDateTime localDateTimeCreated =
         LocalDateTime.parse(parsedCreated, DATE_TIME_FORMATTER);
