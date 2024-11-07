@@ -5,11 +5,13 @@ import com.group6.nova.dashboard.backend.annotation.OrderLineAndProductImportJob
 import com.group6.nova.dashboard.backend.annotation.OrderLineValidator;
 import com.group6.nova.dashboard.backend.annotation.OrderValidator;
 import com.group6.nova.dashboard.backend.service.CsvFileValidator;
+import com.group6.nova.dashboard.backend.service.CsvFileValidatorErrorCode;
 import com.group6.nova.dashboard.backend.service.ImportJob;
 import jakarta.validation.Valid;
+import java.text.Collator;
 import java.util.Locale;
+import java.util.Map;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -32,11 +34,10 @@ import org.springframework.web.multipart.MultipartFile;
 /// @see MultipartFile
 @RestController
 @RequestMapping("/api")
-@Slf4j
 @ToString
 public class OrderController {
-  /// Default OK response message
-  private static final String UPLOAD_REQUESTED_BODY = "Upload requested";
+  /// [Collator] instance
+  private static final Collator COLLATOR = Collator.getInstance(Locale.US);
 
   /// orderValidator bean
   private final CsvFileValidator orderValidator;
@@ -79,7 +80,7 @@ public class OrderController {
     messageSource = messageSourceParameter;
   }
 
-  private ResponseEntity<String> validateAndGenerateResponse(
+  private ResponseEntity<Map<String, String>> validateAndGenerateResponse(
       final MultipartFile multipartFile,
       final Errors bindingResult,
       final CsvFileValidator validator,
@@ -93,6 +94,16 @@ public class OrderController {
         errorCode = "error.null";
       }
 
+      final String fileValidationErrorCode =
+          CsvFileValidatorErrorCode.FILE_VALIDATION.getErrorCode();
+
+      if (0 == COLLATOR.compare(fileValidationErrorCode, errorCode)) {
+        final String validationErrorMessage =
+            bindingResult.getAllErrors().getFirst().getDefaultMessage();
+
+        throw new ValidationException(validationErrorMessage);
+      }
+
       final String supportedFilePrefix = validator.getSupportedFilePrefix();
       final String message =
           messageSource.getMessage(errorCode, new Object[] {supportedFilePrefix}, Locale.ENGLISH);
@@ -102,7 +113,9 @@ public class OrderController {
 
     importJob.launchImportJob(job, multipartFile);
 
-    return new ResponseEntity<>(UPLOAD_REQUESTED_BODY, HttpStatus.OK);
+    final Map<String, String> responseObject = Map.of("message", "Import started");
+
+    return new ResponseEntity<>(responseObject, HttpStatus.OK);
   }
 
   /// Handles the upload of the `orders_*` CSV file.
@@ -111,7 +124,7 @@ public class OrderController {
   /// @return a message indicating that the upload started
   /// @throws ValidationException on validation errors
   @PostMapping(value = "/orders", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public final ResponseEntity<String> orderHandler(
+  public final ResponseEntity<Map<String, String>> orderHandler(
       @Valid @RequestParam("orders") final MultipartFile multipartFile) {
     final Errors bindingResult = new BeanPropertyBindingResult(multipartFile, "order");
 
@@ -125,8 +138,8 @@ public class OrderController {
   /// @return a message indicating that the upload started
   /// @throws ValidationException on validation errors
   @PostMapping(value = "/order-lines", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public final ResponseEntity<String> orderLinesHandler(
-      @Valid @RequestParam("order-lines") final MultipartFile multipartFile) {
+  public final ResponseEntity<Map<String, String>> orderLinesHandler(
+      @Valid @RequestParam("orderlines") final MultipartFile multipartFile) {
     final Errors bindingResult = new BeanPropertyBindingResult(multipartFile, "orderLine");
 
     return validateAndGenerateResponse(
