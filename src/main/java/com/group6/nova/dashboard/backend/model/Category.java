@@ -1,5 +1,6 @@
 package com.group6.nova.dashboard.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +29,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties("hibernateLazyInitializer")
 public class Category {
   /// Category ID
   @Id

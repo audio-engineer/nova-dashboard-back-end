@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api")
 @ToString
-public class OrderController {
+public class ImportController {
   /// [Collator] instance
   private static final Collator COLLATOR = Collator.getInstance(Locale.US);
 
@@ -65,7 +65,7 @@ public class OrderController {
   /// @param orderLineAndProductImportJobParameter orderLineImportJob bean
   /// @param importJobParameter ImportJobService instance
   /// @param messageSourceParameter MessageSource instance
-  public OrderController(
+  public ImportController(
       @OrderValidator final CsvFileValidator orderValidatorParameter,
       @OrderLineValidator final CsvFileValidator orderLineValidatorParameter,
       @OrderImportJob final Job orderImportJobParameter,

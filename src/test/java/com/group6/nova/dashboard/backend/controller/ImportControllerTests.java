@@ -20,17 +20,17 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-/// Tests of the [OrderController] class.
+/// Tests of the [ImportController] class.
 ///
 /// @author Martin Kedmenec
-/// @see OrderController
+/// @see ImportController
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
 @NoArgsConstructor
 @ToString
 @SuppressWarnings("NestedMethodCall")
-class OrderControllerTests {
+class ImportControllerTests {
   /// [MockMvc] instance
   @Autowired private MockMvc mockMvc;
 
