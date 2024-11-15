@@ -6,6 +6,7 @@ import com.group6.nova.dashboard.backend.model.DailyCategorySalesProjection;
 import com.group6.nova.dashboard.backend.model.DailyHourlySalesDto;
 import com.group6.nova.dashboard.backend.model.DailyHourlySalesProjection;
 import com.group6.nova.dashboard.backend.model.HourlySalesDto;
+import com.group6.nova.dashboard.backend.model.TotalDailyRevenueProjection;
 import com.group6.nova.dashboard.backend.model.TotalDailySalesProjection;
 import com.group6.nova.dashboard.backend.repository.OrderLineRepository;
 import java.time.LocalDate;
@@ -34,6 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 @ToString
 public class ChartController {
+  /// Request param key for the start date
+  private static final String START_DATE_PARAM_KEY = "startDate";
+
+  /// Request param key for the end date
+  private static final String END_DATE_PARAM_KEY = "endDate";
+
   /// [OrderLineRepository] instance
   private final OrderLineRepository orderLineRepository;
 
@@ -45,14 +52,19 @@ public class ChartController {
 
   /// [PagedResourcesAssembler] instance
   private final PagedResourcesAssembler<TotalDailySalesProjection>
-      pagedResourcesAssemblerTotalDaily;
+      pagedResourcesAssemblerTotalDailySales;
+
+  /// [PagedResourcesAssembler] instance
+  private final PagedResourcesAssembler<TotalDailyRevenueProjection>
+      pagedResourcesAssemblerTotalDailyRevenue;
 
   /// Constructor.
   ///
   /// @param orderLineRepositoryParameter OrderLineRepository instance
   /// @param pagedResourcesAssemblerDailyCategoryParameter PagedResourcesAssembler instance
   /// @param pagedResourcesAssemblerDailyHourlyParameter PagedResourcesAssembler instance
-  /// @param pagedResourcesAssemblerTotalDailyParameter PagedResourcesAssembler instance
+  /// @param pagedResourcesAssemblerTotalDailySalesParameter PagedResourcesAssembler instance
+  /// @param pagedResourcesAssemblerTotalDailyRevenueParameter PagedResourcesAssembler instance
   public ChartController(
       final OrderLineRepository orderLineRepositoryParameter,
       final PagedResourcesAssembler<DailyCategorySalesDto>
@@ -60,7 +72,9 @@ public class ChartController {
       final PagedResourcesAssembler<DailyHourlySalesDto>
           pagedResourcesAssemblerDailyHourlyParameter,
       final PagedResourcesAssembler<TotalDailySalesProjection>
-          pagedResourcesAssemblerTotalDailyParameter) {
+          pagedResourcesAssemblerTotalDailySalesParameter,
+      final PagedResourcesAssembler<TotalDailyRevenueProjection>
+          pagedResourcesAssemblerTotalDailyRevenueParameter) {
     orderLineRepository = orderLineRepositoryParameter;
     // [Objects#requireNonNull(Object)] is a workaround for SpotBugs error EI_EXPOSE_REP2
     pagedResourcesAssemblerDailyCategory =
@@ -71,10 +85,14 @@ public class ChartController {
         Objects.requireNonNull(
             pagedResourcesAssemblerDailyHourlyParameter,
             "pagedResourcesAssemblerDailyHourlyParameter must not be null");
-    pagedResourcesAssemblerTotalDaily =
+    pagedResourcesAssemblerTotalDailySales =
         Objects.requireNonNull(
-            pagedResourcesAssemblerTotalDailyParameter,
-            "pagedResourcesAssemblerTotalDailyParameter must not be null");
+            pagedResourcesAssemblerTotalDailySalesParameter,
+            "pagedResourcesAssemblerTotalDailySalesParameter must not be null");
+    pagedResourcesAssemblerTotalDailyRevenue =
+        Objects.requireNonNull(
+            pagedResourcesAssemblerTotalDailyRevenueParameter,
+            "pagedResourcesAssemblerTotalDailyRevenueParameter must not be null");
   }
 
   /// Returns a list of dates and sales per category.
@@ -85,8 +103,8 @@ public class ChartController {
   /// @return a HATEOAS list of dates and sales per category for each date
   @GetMapping("/daily-category-sales")
   public final PagedModel<EntityModel<DailyCategorySalesDto>> getDailyCategorySales(
-      @RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
-      @RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
+      @RequestParam(START_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
+      @RequestParam(END_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
       final Pageable pageable) {
     final List<DailyCategorySalesProjection> dailyCategorySalesProjections =
         orderLineRepository.findDailyCategorySales(startDate, endDate);
@@ -113,16 +131,16 @@ public class ChartController {
     return pagedResourcesAssemblerDailyCategory.toModel(dailyCategorySalesDtoPage);
   }
 
-  /// Returns a list of dates and sales per category.
+  /// Returns a list of dates and hourly sales.
   ///
   /// @param startDate start date of the query
   /// @param endDate end date of the query
   /// @param pageable Pageable instance
-  /// @return a HATEOAS list of dates and sales per category for each date
+  /// @return a HATEOAS list of dates and hourly sales for each date
   @GetMapping("/daily-hourly-sales")
   public final PagedModel<EntityModel<DailyHourlySalesDto>> getDailyHourlySales(
-      @RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
-      @RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
+      @RequestParam(START_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
+      @RequestParam(END_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
       final Pageable pageable) {
     final List<DailyHourlySalesProjection> dailyHourlySalesProjections =
         orderLineRepository.findDailyHourlySales(startDate, endDate);
@@ -151,20 +169,37 @@ public class ChartController {
     return pagedResourcesAssemblerDailyHourly.toModel(dailyHourlySalesDtoPage);
   }
 
-  /// Returns a list of dates and sales per category.
+  /// Returns a list of dates and total sales on a specific date.
   ///
   /// @param startDate start date of the query
   /// @param endDate end date of the query
   /// @param pageable Pageable instance
-  /// @return a HATEOAS list of dates and sales per category for each date
+  /// @return a HATEOAS list of dates and total sales on a specific date
   @GetMapping("/total-daily-sales")
   public final PagedModel<EntityModel<TotalDailySalesProjection>> getTotalDailySales(
-      @RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
-      @RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
+      @RequestParam(START_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
+      @RequestParam(END_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
       final Pageable pageable) {
-    final Page<TotalDailySalesProjection> totalTotalDailySalesProjections =
+    final Page<TotalDailySalesProjection> totalDailySalesProjections =
         orderLineRepository.findTotalDailySales(startDate, endDate, pageable);
 
-    return pagedResourcesAssemblerTotalDaily.toModel(totalTotalDailySalesProjections);
+    return pagedResourcesAssemblerTotalDailySales.toModel(totalDailySalesProjections);
+  }
+
+  /// Returns a list of dates and total revenue on a specific date.
+  ///
+  /// @param startDate start date of the query
+  /// @param endDate end date of the query
+  /// @param pageable Pageable instance
+  /// @return a HATEOAS list of dates and total revenue on a specific date
+  @GetMapping("/total-daily-revenue")
+  public final PagedModel<EntityModel<TotalDailyRevenueProjection>> getTotalDailyRevenue(
+      @RequestParam(START_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate startDate,
+      @RequestParam(END_DATE_PARAM_KEY) @DateTimeFormat(iso = ISO.DATE) final LocalDate endDate,
+      final Pageable pageable) {
+    final Page<TotalDailyRevenueProjection> totalDailyRevenueProjections =
+        orderLineRepository.findDailyRevenue(startDate, endDate, pageable);
+
+    return pagedResourcesAssemblerTotalDailyRevenue.toModel(totalDailyRevenueProjections);
   }
 }

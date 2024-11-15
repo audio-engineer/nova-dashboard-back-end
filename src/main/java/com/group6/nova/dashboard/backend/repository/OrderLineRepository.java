@@ -3,6 +3,7 @@ package com.group6.nova.dashboard.backend.repository;
 import com.group6.nova.dashboard.backend.model.DailyCategorySalesProjection;
 import com.group6.nova.dashboard.backend.model.DailyHourlySalesProjection;
 import com.group6.nova.dashboard.backend.model.OrderLine;
+import com.group6.nova.dashboard.backend.model.TotalDailyRevenueProjection;
 import com.group6.nova.dashboard.backend.model.TotalDailySalesProjection;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,5 +67,23 @@ public interface OrderLineRepository extends JpaRepository<OrderLine, UUID> {
           order by o.order.businessDate
           """)
   Page<TotalDailySalesProjection> findTotalDailySales(
+      LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+  /// Returns the total daily revenue between two business dates.
+  ///
+  /// @param startDate start date
+  /// @param endDate end date
+  /// @param pageable Pageable instance
+  /// @return list of daily total revenue
+  @Query(
+      """
+          select o.order.businessDate as date,
+            sum(o.price) as totalRevenue
+          from OrderLine o
+          where o.order.businessDate between :startDate and :endDate
+          group by o.order.businessDate
+          order by o.order.businessDate
+          """)
+  Page<TotalDailyRevenueProjection> findDailyRevenue(
       LocalDate startDate, LocalDate endDate, Pageable pageable);
 }
